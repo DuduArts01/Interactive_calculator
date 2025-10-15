@@ -14,15 +14,15 @@ current_screen = "menu"
 
 while current_screen:
     if current_screen == "menu": # Screen Menu
-        main_menu = MainMenuProgram(screen)
-        current_screen = main_menu.run()
+        controler_screen = MainMenuProgram(screen)
+        current_screen = controler_screen.run()
 
     elif current_screen == "gameselect": # Screen select mode game
-        selectmodegame = Select_Mode(screen)
-        current_screen = selectmodegame.run()
+        controler_screen = Select_Mode(screen)
+        current_screen = controler_screen.run()
     elif current_screen == "computergame": # Screen select mode game
-        computergame = Game_computer(screen)
-        current_screen = computergame.run()
+        controler_screen = Game_computer(screen)
+        current_screen = controler_screen.run()
 
 pygame.quit()
 sys.exit()

@@ -2,6 +2,7 @@ import pygame
 from mainImages import MainControlImages
 from button.button import Button
 from font.font_edit import Font
+from onevscomputer.logic import Logic_calculator
 
 class Game_computer:
     def __init__(self, screen):
@@ -57,6 +58,15 @@ class Game_computer:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
                         self.toggle_fullscreen()
+
+            '''Linkar isso com o NFC'''
+            logic = Logic_calculator() # Call the class
+            logic.randomNumber() # Computer random two numbers
+            operator = logic.choose_operator() # symbols operator: + - * /
+
+            answer_user = int(input(f"Quanto é {logic.n1} {operator} {logic.n2}?\n")) # input value of User
+
+            print(logic.checknumber(answer_user)) # Check answer User
 
             # Verifica se o botão foi clicado
             if self.onevsComputer.action:
