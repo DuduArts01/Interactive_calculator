@@ -11,7 +11,7 @@ class Logic_calculator:
         self.n2 = 2 
 
     def choose_operator(self):
-        self.choose = 3 #randint(0,3)
+        self.choose = randint(0,3)
         
         # Easy calculate numbers to user
         if self.choose == 3: # 3 

@@ -58,7 +58,7 @@ class Select_Mode:
                     if event.key == pygame.K_f:
                         self.toggle_fullscreen()
 
-            # Verifica se o botão foi clicado
+            '''Button action'''            
             if self.onevsComputer.action:
                 self.onevsComputer.draw(self.screen)         # Mostra imagem clicada
                 pygame.display.update()                    # Atualiza tela

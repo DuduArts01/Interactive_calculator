@@ -3,6 +3,7 @@ from mainImages import MainControlImages
 from button.button import Button
 from font.font_edit import Font
 from onevscomputer.logic import Logic_calculator
+from time import sleep
 
 class Game_computer:
     def __init__(self, screen):
@@ -45,6 +46,8 @@ class Game_computer:
             self.screen.fill((255, 255, 255))
             pygame.display.set_caption("Calculadora Interativa (1 Vs Computer)")
 
+            self.title = Font(f"Player vs Computer", "Arial", 60, (0,0,0)) #Title Game
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -64,10 +67,12 @@ class Game_computer:
             logic.randomNumber() # Computer random two numbers
             operator = logic.choose_operator() # symbols operator: + - * /
 
-            answer_user = int(input(f"Quanto é {logic.n1} {operator} {logic.n2}?\n")) # input value of User
+            answer_user = None
 
-            print(logic.checknumber(answer_user)) # Check answer User
+            # Show operation on screen
+            self.NumbershowScreen = Font(f"{logic.n1} {operator} {logic.n2} = ?", "Arial", 60, (0,0,0)) #Title Game
 
+            '''Button action'''
             # Verifica se o botão foi clicado
             if self.onevsComputer.action:
                 self.onevsComputer.draw(self.screen)         # Mostra imagem clicada
@@ -79,9 +84,38 @@ class Game_computer:
             # Draw title (show on screen)
             self.title.draw(self.screen, y=100)  # Draw center title
 
+            # Draw operation (show on screen)
+            self.NumbershowScreen.draw(self.screen, y=300)
+
             # Draw buttons (show on screen)
             self.onevsComputer.draw(self.screen) # Button one vs computer
             
             pygame.display.update()
 
+            '''In this block it will be replaced by NFC '''
+            # Test in terminal
+            answer_user = int(input(f"Quanto é {logic.n1} {operator} {logic.n2}?\n")) # input value of User
+
+            print(logic.checknumber(answer_user)) # Check answer User
+            
+            '''Show result'''
+            if answer_user != None:
+                # Clean screen
+                self.screen.fill((255, 255, 255))
+
+                # Keeps the title on the screen
+                self.title = Font(f"Player vs Computer", "Arial", 60, (0,0,0)) #Title Game
+
+                # Show result on screen
+                self.result = Font(f"{logic.checknumber(answer_user)}", "Arial", 60, (0,0,0)) #Title Game
+
+                # Title Show
+                self.title.draw(self.screen, y = 100)
+
+                # Result Show
+                self.result.draw(self.screen, y = 300)
+
+                pygame.display.update()
+
+                sleep(2) # Wait 2 seconds to update screen again
         return next_screen

@@ -5,6 +5,7 @@ from mainImages import MainControlImages
 from gameselect.gameselect import Select_Mode
 from onevscomputer.computer import Game_computer
 
+
 pygame.init()
 screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
 MainControlImages.load()

@@ -58,7 +58,7 @@ class MainMenuProgram:
                     if event.key == pygame.K_f:
                         self.toggle_fullscreen()
 
-            # Verifica se o botão foi clicado
+            '''Button action'''
             if self.start_button.action:
                 self.start_button.draw(self.screen)         # Mostra imagem clicada
                 pygame.display.update()                    # Atualiza tela
