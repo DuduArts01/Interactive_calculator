@@ -4,6 +4,7 @@ from button.button import Button
 from font.font_edit import Font
 from onevscomputer.logic import Logic_calculator
 from time import sleep
+from nfc.nfc_game_interface_on_demand import NFCGameInterface
 
 class Game_computer:
     def __init__(self, screen):
@@ -11,6 +12,7 @@ class Game_computer:
         self.fullscreen = False
         self.image_1vC_data = MainControlImages.sprite_1vComputer_image_data
         self.resizedElements()
+        self.nfc = NFCGameInterface("uids.json")
 
     def resizedElements(self):
         width, height = self.screen.get_size()
@@ -62,7 +64,7 @@ class Game_computer:
                     if event.key == pygame.K_f:
                         self.toggle_fullscreen()
 
-            '''Linkar isso com o NFC'''
+            '''Call the functions logic game'''
             logic = Logic_calculator() # Call the class
             logic.randomNumber() # Computer random two numbers
             operator = logic.choose_operator() # symbols operator: + - * /
@@ -78,8 +80,11 @@ class Game_computer:
                 self.onevsComputer.draw(self.screen)         # Mostra imagem clicada
                 pygame.display.update()                    # Atualiza tela
                 pygame.time.delay(150)                     # Delay de 150ms
-                running = False
-                next_screen = "gameselect"                      # Troca para tela 1vComputer
+                
+                # no loop do pygame, no evento do botão "Enviar":
+                # quando o jogador clicar em enviar:
+                ten, unit, total = self.nfc.read_once()
+                print("Leitura ao enviar -> dezena:", ten, "unidade:", unit, "total:", total)
 
             # Draw title (show on screen)
             self.title.draw(self.screen, y=100)  # Draw center title
@@ -118,4 +123,8 @@ class Game_computer:
                 pygame.display.update()
 
                 sleep(2) # Wait 2 seconds to update screen again
+        
+        # ao finalizar o jogo:
+        self.nfc.close()
+
         return next_screen

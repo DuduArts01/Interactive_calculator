@@ -27,7 +27,7 @@ class Logic_calculator:
                 self.n1 = randint(0,10)
                 self.n2 = randint(0,9)
 
-            return "*" 
+            return "x" 
         
         elif self.choose: # 1
             while self.n1 < self.n2: # Answer is interger and n1 >= n2
@@ -45,18 +45,18 @@ class Logic_calculator:
 
     def checknumber(self, answerUser):
         if self.choose == 3 and answerUser == (self.n1 / self.n2): # Correct Sum
-            return "Congratulation!"
+            return "Parabéns!"
         elif self.choose == 3 and answerUser != (self.n1 / self.n2): # Wrong Sum
-            return "You wrong! Try again!" 
+            return "Errou! Tente de novo!" 
         elif self.choose == 2 and answerUser == (self.n1 * self.n2): # Correct Subtration
-            return "Congratulation!"
+            return "Parabéns!"
         elif self.choose == 2 and answerUser != (self.n1 * self.n2): # Wrong Subtration
-            return "You wrong! Try again!"
+            return "Errou! Tente de novo!"
         elif self.choose and answerUser == (self.n1 - self.n2): # Correct multiply
-            return "Congratulation!"
+            return "Parabéns!"
         elif self.choose and answerUser != (self.n1 - self.n2): # Wrong multiply
-            return "You wrong! Try again!"
+            return "Errou! Tente de novo!"
         elif not self.choose and answerUser == (self.n1 + self.n2): # Correct Division
-            return "Congratulation!"
+            return "Parabéns!"
         elif not self.choose and answerUser != (self.n1 + self.n2): # Wrong Division
-            return "You wrong! Try again!"
+            return "Errou! Tente de novo!"
