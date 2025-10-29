@@ -12,7 +12,8 @@ class Game_computer:
         self.fullscreen = False
         self.image_1vC_data = MainControlImages.sprite_1vComputer_image_data
         self.resizedElements()
-        self.nfc = NFCGameInterface("uids.json")
+        self.nfc = NFCGameInterface("nfc/uids.json")
+        self.operation_and_random = True
 
     def resizedElements(self):
         width, height = self.screen.get_size()
@@ -64,15 +65,20 @@ class Game_computer:
                     if event.key == pygame.K_f:
                         self.toggle_fullscreen()
 
-            '''Call the functions logic game'''
-            logic = Logic_calculator() # Call the class
-            logic.randomNumber() # Computer random two numbers
-            operator = logic.choose_operator() # symbols operator: + - * /
-
             answer_user = None
 
-            # Show operation on screen
-            self.NumbershowScreen = Font(f"{logic.n1} {operator} {logic.n2} = ?", "Arial", 60, (0,0,0)) #Title Game
+            if self.operation_and_random:
+                '''Call the functions logic game'''
+                logic = Logic_calculator() # Call the class
+                logic.randomNumber() # Computer random two numbers
+                operator = logic.choose_operator() # symbols operator: + - * /
+
+                # Show operation on screen
+                self.NumbershowScreen = Font(f"{logic.n1} {operator} {logic.n2} = ?", "Arial", 60, (0,0,0)) #Title Game
+            
+            self.operation_and_random = False
+
+            
 
             '''Button action'''
             # Verifica se o botão foi clicado
@@ -85,6 +91,8 @@ class Game_computer:
                 # quando o jogador clicar em enviar:
                 ten, unit, total = self.nfc.read_once()
                 print("Leitura ao enviar -> dezena:", ten, "unidade:", unit, "total:", total)
+                answer_user = total
+                self.operation_and_random = True
 
             # Draw title (show on screen)
             self.title.draw(self.screen, y=100)  # Draw center title
@@ -97,9 +105,6 @@ class Game_computer:
             
             pygame.display.update()
 
-            '''In this block it will be replaced by NFC '''
-            # Test in terminal
-            answer_user = int(input(f"Quanto é {logic.n1} {operator} {logic.n2}?\n")) # input value of User
 
             print(logic.checknumber(answer_user)) # Check answer User
             
