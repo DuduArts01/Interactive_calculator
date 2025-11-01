@@ -1,14 +1,20 @@
 import pygame
 from mainImages import MainControlImages
 from button.button import Button
-from font.font_edit import Font
+from title.title import Title
+from background.background import Background
 
 class MainMenuProgram:
     def __init__(self, screen):
         self.screen = screen
         self.fullscreen = False
-        self.image_data = MainControlImages.start_image_data
+        
+        # Images
+        self.start_image_data = MainControlImages.start_image_data
+        self.interative_calculator_image_data = MainControlImages.interative_calculator_image_data
         self.resizedElements()
+
+        self.background_green = Background(self.screen)
 
     def resizedElements(self):
         width, height = self.screen.get_size()
@@ -18,15 +24,20 @@ class MainMenuProgram:
         scale_y = height / base_height
         scale_factor = min(scale_x, scale_y) * 8
 
+        self.interactive_calculator = Title(
+            self.interative_calculator_image_data["image"],
+            x=width / 2,
+            y=height - (height / 1.5),
+            width= self.interative_calculator_image_data["resize_x"],
+            height= self.interative_calculator_image_data["resize_y"]
+        )
+
         self.start_button = Button(
-            self.image_data["image"],
+            self.start_image_data["image"],
             x=width / 2,
             y=height - (height / 5),
             scale_factor=scale_factor
-        )
-
-
-        self.title = Font("Calculador Interativa", "Arial", 60, (0,0,0)) #Title Game
+        )        
 
     def toggle_fullscreen(self):
         self.fullscreen = not self.fullscreen
@@ -41,7 +52,6 @@ class MainMenuProgram:
         next_screen = None
 
         while running:
-            self.screen.fill((255, 255, 255))
             pygame.display.set_caption("Calculadora Interativa (MAIN MENU)")
 
             for event in pygame.event.get():
@@ -66,8 +76,11 @@ class MainMenuProgram:
                 running = False
                 next_screen = "gameselect"                      # Troca para tela da loja
 
+            # Draw green background
+            self.background_green.draw()
+
             # Draw Title (show on screen)
-            self.title.draw(self.screen, y=100)  # Draw center title
+            self.interactive_calculator.draw(self.screen)  # Draw center title
 
             # Draw button (show on screen)
             self.start_button.draw(self.screen) # Button Start

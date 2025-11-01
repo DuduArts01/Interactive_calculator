@@ -1,14 +1,18 @@
 import pygame
 from mainImages import MainControlImages
 from button.button import Button
-from font.font_edit import Font
+from background.background import Background
+from title.title import Title
 
 class Select_Mode:
     def __init__(self, screen):
         self.screen = screen
         self.fullscreen = False
         self.image_1vC_data = MainControlImages.sprite_1vComputer_image_data
+        self.selectmode_image_data = MainControlImages.selectmode_image_data
         self.resizedElements()
+
+        self.background_green = Background(self.screen)
 
     def resizedElements(self):
         width, height = self.screen.get_size()
@@ -18,15 +22,20 @@ class Select_Mode:
         scale_y = height / base_height
         scale_factor = min(scale_x, scale_y) * 8
 
+        self.selectmode = Title(
+            self.selectmode_image_data["image"],
+            x=width / 2,
+            y=height - (height / 1.8),
+            width= self.selectmode_image_data["resize_x"],
+            height= self.selectmode_image_data["resize_y"]
+        )
+
         self.onevsComputer = Button(
             self.image_1vC_data["image"],
             x=width / 3,
             y=height - (height / 5),
             scale_factor=scale_factor
         )
-
-
-        self.title = Font("Selecione o modo de jogo", "Arial", 60, (0,0,0)) #Title Game
 
     def toggle_fullscreen(self):
         self.fullscreen = not self.fullscreen
@@ -41,7 +50,9 @@ class Select_Mode:
         next_screen = None
 
         while running:
-            self.screen.fill((255, 255, 255))
+            # Draw green background
+            self.background_green.draw()
+
             pygame.display.set_caption("Calculadora Interativa (Selecionar Modo de Jogo)")
 
             for event in pygame.event.get():
@@ -67,7 +78,7 @@ class Select_Mode:
                 next_screen = "computergame"                      # Troca para tela 1vComputer
 
             # Draw title (show on screen)
-            self.title.draw(self.screen, y=100)  # Draw center title
+            self.selectmode.draw(self.screen)  # Draw center title
 
             # Draw buttons (show on screen)
             self.onevsComputer.draw(self.screen) # Button one vs computer

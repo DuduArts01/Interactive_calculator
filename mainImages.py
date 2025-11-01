@@ -6,9 +6,21 @@ class MainControlImages:
     def load(cls):
         # main directory
         main = os.path.dirname(__file__)
+
+        '''title'''
+        #directory button
+        title = os.path.join(main, "data/title")
+
+        #image title
+        interative_calculator = os.path.join(title, "calculadora_interativa.png") # calculator interactive
+        selectmode = os.path.join(title, "select_mode.png") # select_mode
         
-        #sprites
-            #directory button
+        #load image
+        cls.interative_calculator_image = pygame.image.load(interative_calculator).convert_alpha() # interative calculator
+        cls.selectmode_image = pygame.image.load(selectmode).convert_alpha() # select mode
+
+        '''sprites'''
+        #directory button
         button = os.path.join(main, "data/sprite/button")
 
         #Sprite in directory button
@@ -20,7 +32,29 @@ class MainControlImages:
         cls.start_image = pygame.image.load(sprite_start).convert_alpha() # Start
         cls.sprite_1vComputer_image = pygame.image.load(sprite_1vComputer).convert_alpha() # 1 vs Computer
 
+
         width, height = cls.start_image.get_size()
+        
+        '''Resize and position'''
+        cls.interative_calculator_image_data = {
+            "image": cls.interative_calculator_image,
+            "x": 0,
+            "y": 0,
+            "width": width,
+            "height": height,
+            "resize_x": width * 8,
+            "resize_y": height * 32,
+        } #title interactive calculator
+
+        cls.selectmode_image_data = {
+            "image": cls.selectmode_image,
+            "x": 0,
+            "y": 0,
+            "width": width,
+            "height": height,
+            "resize_x": width * 10,
+            "resize_y": height * 40,
+        } #title select mode
 
         cls.start_image_data = {
             "image": cls.start_image,
@@ -38,6 +72,6 @@ class MainControlImages:
             "y": 0,
             "width": width,
             "height": height,
-            "resize_x": width * 2,
-            "resize_y": height * 2,
+            "resize_x": width * 0.1,
+            "resize_y": height * 0.1,
         } #sprite 1vC
