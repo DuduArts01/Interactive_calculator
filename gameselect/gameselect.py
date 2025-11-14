@@ -73,7 +73,7 @@ class Select_Mode:
             if self.onevsComputer.action:
                 self.onevsComputer.draw(self.screen)         # Mostra imagem clicada
                 pygame.display.update()                    # Atualiza tela
-                pygame.time.delay(150)                     # Delay de 150ms
+                pygame.time.delay(250)                     # Delay de 150ms
                 running = False
                 next_screen = "computergame"                      # Troca para tela 1vComputer
 
