@@ -30,7 +30,7 @@ class Game_computer:
         self.PVsComputerTitle = Title(
             self.PVsComputerTitle_image_data["image"],
             x=width / 2,
-            y=height - (height / 1.3),
+            y=height - (height / 1.15),
             width= self.PVsComputerTitle_image_data["resize_x"],
             height= self.PVsComputerTitle_image_data["resize_y"]
         )
