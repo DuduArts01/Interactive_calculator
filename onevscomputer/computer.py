@@ -5,6 +5,7 @@ from font.font_edit import Font
 from onevscomputer.logic import Logic_calculator
 from time import sleep
 from nfc.nfc_game_interface_on_demand import NFCGameInterface
+from background.background import Background
 from title.title import Title
 
 class Game_computer:
@@ -16,6 +17,7 @@ class Game_computer:
         self.resizedElements()
         self.nfc = NFCGameInterface("nfc/uids.json")
         self.operation_and_random = True
+        self.background_green = Background(self.screen)
 
     def resizedElements(self):
         width, height = self.screen.get_size()
@@ -53,7 +55,7 @@ class Game_computer:
         next_screen = None
 
         while running:
-            self.screen.fill((255, 255, 255))
+            self.background_green.draw()
             pygame.display.set_caption("Calculadora Interativa (1 Vs Computer)")            
 
             for event in pygame.event.get():
@@ -114,7 +116,7 @@ class Game_computer:
             '''Show result'''
             if answer_user != None:
                 # Clean screen
-                self.screen.fill((255, 255, 255))
+                self.background_green.draw()
 
                 # Keeps the title on the screen
                 self.title = Font(f"Player vs Computer", "Arial", 60, (0,0,0)) #Title Game
