@@ -33,7 +33,7 @@ class Select_Mode:
         self.onevsComputer = Button(
             self.sprite_1vComputer_image_data["image"],
             x=width / 2,
-            y=height - (height / 5),
+            y=height - (height / 4),
             scale_factor=scale_factor / 10
         )
 
