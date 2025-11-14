@@ -54,9 +54,7 @@ class Game_computer:
 
         while running:
             self.screen.fill((255, 255, 255))
-            pygame.display.set_caption("Calculadora Interativa (1 Vs Computer)")
-
-            
+            pygame.display.set_caption("Calculadora Interativa (1 Vs Computer)")            
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -83,9 +81,7 @@ class Game_computer:
                 # Show operation on screen
                 self.NumbershowScreen = Font(f"{logic.n1} {operator} {logic.n2} = ?", "Arial", 60, (0,0,0)) #Title Game
             
-            self.operation_and_random = False
-
-            
+            self.operation_and_random = False            
 
             '''Button action'''
             # Verifica se o botão foi clicado
@@ -102,7 +98,7 @@ class Game_computer:
                 self.operation_and_random = True
 
             # Draw title (show on screen)
-            self.PVsComputerTitle(self.screen)
+            self.PVsComputerTitle.draw(self.screen)
 
             # Draw operation (show on screen)
             self.NumbershowScreen.draw(self.screen, y=300)
