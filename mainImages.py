@@ -66,8 +66,8 @@ class MainControlImages:
             "y": 0,
             "width": width,
             "height": height,
-            "resize_x": width * 10,
-            "resize_y": height * 15,
+            "resize_x": width * 7,
+            "resize_y": height * 10,
         } #title select mode
 
         cls.start_image_data = {

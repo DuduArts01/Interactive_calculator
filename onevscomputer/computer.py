@@ -81,7 +81,7 @@ class Game_computer:
                 operator = logic.choose_operator() # symbols operator: + - * /
 
                 # Show operation on screen
-                self.NumbershowScreen = Font(f"{logic.n1} {operator} {logic.n2} = ?", "Arial", 60, (0,0,0)) #Title Game
+                self.NumbershowScreen = Font(f"{logic.n1} {operator} {logic.n2} = ?", "Arial", 60) #Title Game
             
             self.operation_and_random = False            
 
@@ -118,14 +118,11 @@ class Game_computer:
                 # Clean screen
                 self.background_green.draw()
 
-                # Keeps the title on the screen
-                self.title = Font(f"Player vs Computer", "Arial", 60, (0,0,0)) #Title Game
+                # Draw title (show on screen)
+                self.PVsComputerTitle.draw(self.screen)
 
                 # Show result on screen
-                self.result = Font(f"{logic.checknumber(answer_user)}", "Arial", 60, (0,0,0)) #Title Game
-
-                # Title Show
-                self.title.draw(self.screen, y = 100)
+                self.result = Font(f"{logic.checknumber(answer_user)}", "Arial", 60) #Title Game
 
                 # Result Show
                 self.result.draw(self.screen, y = 300)
