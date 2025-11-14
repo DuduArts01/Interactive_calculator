@@ -26,8 +26,8 @@ class Game_computer:
         self.send = Button(
             self.image_1vC_data["image"],
             x=width / 2,
-            y=height - (height / 5),
-            scale_factor=scale_factor / 4
+            y=height - (height / 2),
+            scale_factor=scale_factor / 10
         )
 
 
