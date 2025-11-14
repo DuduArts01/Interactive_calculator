@@ -5,12 +5,14 @@ from font.font_edit import Font
 from onevscomputer.logic import Logic_calculator
 from time import sleep
 from nfc.nfc_game_interface_on_demand import NFCGameInterface
+from title.title import Title
 
 class Game_computer:
     def __init__(self, screen):
         self.screen = screen
         self.fullscreen = False
         self.image_1vC_data = MainControlImages.send_imag_image_data
+        self.PVsComputerTitle_image_data = MainControlImages.PVsComputerTitle_image_data
         self.resizedElements()
         self.nfc = NFCGameInterface("nfc/uids.json")
         self.operation_and_random = True
@@ -23,15 +25,20 @@ class Game_computer:
         scale_y = height / base_height
         scale_factor = min(scale_x, scale_y) * 8
 
+        self.PVsComputerTitle = Title(
+            self.PVsComputerTitle_image_data["image"],
+            x=width / 2,
+            y=height - (height / 1.3),
+            width= self.PVsComputerTitle_image_data["resize_x"],
+            height= self.PVsComputerTitle_image_data["resize_y"]
+        )
+
         self.send = Button(
             self.image_1vC_data["image"],
             x=width / 2,
             y=height - (height / 4),
             scale_factor=scale_factor / 10
-        )
-
-
-        self.title = Font("1 Vs Computer", "Arial", 60, (0,0,0)) #Title Game
+        )        
 
     def toggle_fullscreen(self):
         self.fullscreen = not self.fullscreen
@@ -49,7 +56,7 @@ class Game_computer:
             self.screen.fill((255, 255, 255))
             pygame.display.set_caption("Calculadora Interativa (1 Vs Computer)")
 
-            self.title = Font(f"Player vs Computer", "Arial", 60, (0,0,0)) #Title Game
+            
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -95,7 +102,7 @@ class Game_computer:
                 self.operation_and_random = True
 
             # Draw title (show on screen)
-            self.title.draw(self.screen, y=100)  # Draw center title
+            self.PVsComputerTitle(self.screen)
 
             # Draw operation (show on screen)
             self.NumbershowScreen.draw(self.screen, y=300)

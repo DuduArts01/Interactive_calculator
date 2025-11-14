@@ -14,10 +14,12 @@ class MainControlImages:
         #image title
         interative_calculator = os.path.join(title, "calculadora_interativa.png") # calculator interactive
         selectmode = os.path.join(title, "select_mode.png") # select_mode
+        PVsComputerTitle = os.path.join(title, "1VComputerTitle.png") # select_mode
         
         #load image
         cls.interative_calculator_image = pygame.image.load(interative_calculator).convert_alpha() # interative calculator
         cls.selectmode_image = pygame.image.load(selectmode).convert_alpha() # select mode
+        cls.PVsComputerTitle_image = pygame.image.load(PVsComputerTitle).convert_alpha() # PVsComputerTitle
 
         '''sprites'''
         #directory button
@@ -58,6 +60,16 @@ class MainControlImages:
             "resize_y": height * 25,
         } #title select mode
 
+        cls.PVsComputerTitle_image_data = {
+            "image": cls.PVsComputerTitle_image,
+            "x": 0,
+            "y": 0,
+            "width": width,
+            "height": height,
+            "resize_x": width * 12,
+            "resize_y": height * 25,
+        } #title select mode
+
         cls.start_image_data = {
             "image": cls.start_image,
             "x": 0, #position x
@@ -77,6 +89,16 @@ class MainControlImages:
             "resize_x": width * 2,
             "resize_y": height * 2,
         } #sprite 1vC
+
+        cls.send_imag_image_data = {
+            "image": cls.send_image,
+            "x": 0, #position x
+            "y": 0, #position y
+            "width": width, #width
+            "height": height, #height
+            "resize_x": width * 2, #resize x
+            "resize_y": height * 2, #resize y
+        } #sprite button send
 
         cls.send_imag_image_data = {
             "image": cls.send_image,
