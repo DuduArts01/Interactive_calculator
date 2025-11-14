@@ -30,7 +30,7 @@ class MainControlImages:
 
         #load sprites
         cls.start_image = pygame.image.load(sprite_start).convert_alpha() # Start
-        cls.sprite_1vComputer_image = pygame.image.load(sprite_1vComputer).convert_alpha() # 1 vs Computer
+        cls.PvComputer_image = pygame.image.load(sprite_1vComputer).convert_alpha() # 1 vs Computer
 
 
         width, height = cls.start_image.get_size()
@@ -42,8 +42,8 @@ class MainControlImages:
             "y": 0,
             "width": width,
             "height": height,
-            "resize_x": width * 8,
-            "resize_y": height * 32,
+            "resize_x": width * 14,
+            "resize_y": height * 30,
         } #title interactive calculator
 
         cls.selectmode_image_data = {
@@ -52,8 +52,8 @@ class MainControlImages:
             "y": 0,
             "width": width,
             "height": height,
-            "resize_x": width * 10,
-            "resize_y": height * 40,
+            "resize_x": width * 12,
+            "resize_y": height * 25,
         } #title select mode
 
         cls.start_image_data = {
@@ -67,11 +67,11 @@ class MainControlImages:
         } #sprite button start
 
         cls.sprite_1vComputer_image_data = {
-            "image": cls.sprite_1vComputer_image,
+            "image": cls.PvComputer_image,
             "x": 0,
             "y": 0,
             "width": width,
             "height": height,
-            "resize_x": width * 0.1,
-            "resize_y": height * 0.1,
+            "resize_x": width * 2,
+            "resize_y": height * 2,
         } #sprite 1vC

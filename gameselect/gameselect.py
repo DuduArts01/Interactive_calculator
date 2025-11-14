@@ -8,7 +8,7 @@ class Select_Mode:
     def __init__(self, screen):
         self.screen = screen
         self.fullscreen = False
-        self.image_1vC_data = MainControlImages.sprite_1vComputer_image_data
+        self.sprite_1vComputer_image_data = MainControlImages.sprite_1vComputer_image_data
         self.selectmode_image_data = MainControlImages.selectmode_image_data
         self.resizedElements()
 
@@ -25,16 +25,16 @@ class Select_Mode:
         self.selectmode = Title(
             self.selectmode_image_data["image"],
             x=width / 2,
-            y=height - (height / 1.8),
+            y=height - (height / 1.3),
             width= self.selectmode_image_data["resize_x"],
             height= self.selectmode_image_data["resize_y"]
         )
 
         self.onevsComputer = Button(
-            self.image_1vC_data["image"],
-            x=width / 3,
+            self.sprite_1vComputer_image_data["image"],
+            x=width / 2,
             y=height - (height / 5),
-            scale_factor=scale_factor
+            scale_factor=scale_factor / 10
         )
 
     def toggle_fullscreen(self):
@@ -77,12 +77,12 @@ class Select_Mode:
                 running = False
                 next_screen = "computergame"                      # Troca para tela 1vComputer
 
+            # Draw buttons (show on screen)
+            self.onevsComputer.draw(self.screen) # Button one vs computer
+
             # Draw title (show on screen)
             self.selectmode.draw(self.screen)  # Draw center title
 
-            # Draw buttons (show on screen)
-            self.onevsComputer.draw(self.screen) # Button one vs computer
-            
             pygame.display.update()
 
         return next_screen
