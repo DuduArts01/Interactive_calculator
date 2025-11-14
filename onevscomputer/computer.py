@@ -27,7 +27,7 @@ class Game_computer:
             self.image_1vC_data["image"],
             x=width / 2,
             y=height - (height / 5),
-            scale_factor=scale_factor
+            scale_factor=scale_factor / 4
         )
 
 
