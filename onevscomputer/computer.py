@@ -10,7 +10,7 @@ class Game_computer:
     def __init__(self, screen):
         self.screen = screen
         self.fullscreen = False
-        self.image_1vC_data = MainControlImages.sprite_1vComputer_image_data
+        self.image_1vC_data = MainControlImages.send_imag_image_data
         self.resizedElements()
         self.nfc = NFCGameInterface("nfc/uids.json")
         self.operation_and_random = True
@@ -23,9 +23,9 @@ class Game_computer:
         scale_y = height / base_height
         scale_factor = min(scale_x, scale_y) * 8
 
-        self.onevsComputer = Button(
+        self.send = Button(
             self.image_1vC_data["image"],
-            x=width / 3,
+            x=width / 2,
             y=height - (height / 5),
             scale_factor=scale_factor
         )
@@ -82,8 +82,8 @@ class Game_computer:
 
             '''Button action'''
             # Verifica se o botão foi clicado
-            if self.onevsComputer.action:
-                self.onevsComputer.draw(self.screen)         # Mostra imagem clicada
+            if self.send.action:
+                self.send.draw(self.screen)         # Mostra imagem clicada
                 pygame.display.update()                    # Atualiza tela
                 pygame.time.delay(150)                     # Delay de 150ms
                 
@@ -101,7 +101,7 @@ class Game_computer:
             self.NumbershowScreen.draw(self.screen, y=300)
 
             # Draw buttons (show on screen)
-            self.onevsComputer.draw(self.screen) # Button one vs computer
+            self.send.draw(self.screen) # Button one vs computer
             
             pygame.display.update()
 
