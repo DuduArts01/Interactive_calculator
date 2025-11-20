@@ -46,8 +46,8 @@ class MainControlImages:
             "y": 0,
             "width": width,
             "height": height,
-            "resize_x": width * 14,
-            "resize_y": height * 30,
+            "resize_x": width * 8,
+            "resize_y": height * 14,
         } #title interactive calculator
 
         cls.selectmode_image_data = {
@@ -56,8 +56,8 @@ class MainControlImages:
             "y": 0,
             "width": width,
             "height": height,
-            "resize_x": width * 12,
-            "resize_y": height * 25,
+            "resize_x": width * 8,
+            "resize_y": height * 14,
         } #title select mode
 
         cls.PVsComputerTitle_image_data = {
@@ -67,7 +67,7 @@ class MainControlImages:
             "width": width,
             "height": height,
             "resize_x": width * 4,
-            "resize_y": height * 8,
+            "resize_y": height * 6,
         } #title select mode
 
         cls.start_image_data = {
@@ -86,8 +86,8 @@ class MainControlImages:
             "y": 0,
             "width": width,
             "height": height,
-            "resize_x": width * 2,
-            "resize_y": height * 2,
+            "resize_x": width,
+            "resize_y": height,
         } #sprite 1vC
 
         cls.send_imag_image_data = {
@@ -99,13 +99,3 @@ class MainControlImages:
             "resize_x": width * 2, #resize x
             "resize_y": height * 2, #resize y
         } #sprite button send
-
-        cls.send_imag_image_data = {
-            "image": cls.send_image,
-            "x": 0, #position x
-            "y": 0, #position y
-            "width": width, #width
-            "height": height, #height
-            "resize_x": width * 2, #resize x
-            "resize_y": height * 2, #resize y
-        } #sprite button start

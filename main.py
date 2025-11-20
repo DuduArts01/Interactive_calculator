@@ -7,7 +7,9 @@ from onevscomputer.computer import Game_computer
 
 
 pygame.init()
-screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+#screen = pygame.display.set_mode((800, 480), pygame.RESIZABLE)
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) # fullscreen automatic
+
 MainControlImages.load()
 
 # Roda enquanto houver telas para mostrar

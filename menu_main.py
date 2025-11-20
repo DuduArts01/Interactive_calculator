@@ -18,8 +18,8 @@ class MainMenuProgram:
 
     def resizedElements(self):
         width, height = self.screen.get_size()
-        base_width = 1280
-        base_height = 720
+        base_width = 800
+        base_height = 480
         scale_x = width / base_width
         scale_y = height / base_height
         scale_factor = min(scale_x, scale_y) * 8
@@ -27,7 +27,7 @@ class MainMenuProgram:
         self.interactive_calculator = Title(
             self.interative_calculator_image_data["image"],
             x=width / 2,
-            y=height - (height / 1.5),
+            y=height - (height / 1.25),
             width= self.interative_calculator_image_data["resize_x"],
             height= self.interative_calculator_image_data["resize_y"]
         )
@@ -36,7 +36,7 @@ class MainMenuProgram:
             self.start_image_data["image"],
             x=width / 2,
             y=height - (height / 5),
-            scale_factor=scale_factor
+            scale_factor=scale_factor / 1.5
         )        
 
     def toggle_fullscreen(self):
@@ -44,7 +44,7 @@ class MainMenuProgram:
         if self.fullscreen:
             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         else:
-            self.screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+            self.screen = pygame.display.set_mode((800, 480), pygame.RESIZABLE)
         self.resizedElements()
 
     def run(self):

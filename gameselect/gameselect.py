@@ -14,10 +14,16 @@ class Select_Mode:
 
         self.background_green = Background(self.screen)
 
+        self.back_img = pygame.image.load("data/icon/arrow_back.png").convert_alpha()
+        self.back_img = pygame.transform.scale(self.back_img, (40, 40))  # tamanho da seta
+
+        self.back_rect = self.back_img.get_rect()
+        self.back_rect.topleft = (20, 10)  # posição no canto superior esquerdo
+
     def resizedElements(self):
         width, height = self.screen.get_size()
-        base_width = 1280
-        base_height = 720
+        base_width = 800
+        base_height = 480
         scale_x = width / base_width
         scale_y = height / base_height
         scale_factor = min(scale_x, scale_y) * 8
@@ -25,7 +31,7 @@ class Select_Mode:
         self.selectmode = Title(
             self.selectmode_image_data["image"],
             x=width / 2,
-            y=height - (height / 1.3),
+            y=height - (height / 1.25),
             width= self.selectmode_image_data["resize_x"],
             height= self.selectmode_image_data["resize_y"]
         )
@@ -34,7 +40,7 @@ class Select_Mode:
             self.sprite_1vComputer_image_data["image"],
             x=width / 2,
             y=height - (height / 4),
-            scale_factor=scale_factor / 10
+            scale_factor=scale_factor / 20
         )
 
     def toggle_fullscreen(self):
@@ -42,7 +48,7 @@ class Select_Mode:
         if self.fullscreen:
             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         else:
-            self.screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+            self.screen = pygame.display.set_mode((800, 480), pygame.RESIZABLE)
         self.resizedElements()
 
     def run(self):
@@ -69,6 +75,12 @@ class Select_Mode:
                     if event.key == pygame.K_f:
                         self.toggle_fullscreen()
 
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.back_rect.collidepoint(event.pos):
+                        pygame.time.delay(150)  # pequeno delay opcional
+                        running = False
+                        next_screen = "menu"
+
             '''Button action'''            
             if self.onevsComputer.action:
                 self.onevsComputer.draw(self.screen)         # Mostra imagem clicada
@@ -82,6 +94,8 @@ class Select_Mode:
 
             # Draw title (show on screen)
             self.selectmode.draw(self.screen)  # Draw center title
+
+            self.screen.blit(self.back_img, self.back_rect)
 
             pygame.display.update()
 
