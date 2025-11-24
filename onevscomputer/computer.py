@@ -142,7 +142,7 @@ class Game_computer:
                 
 
                 # ----------- RESULTADOS -------------
-                if answer_user == logic.correct_answer:
+                if logic.is_correct(answer_user):
                     # ACERTO → +5s e próxima questão
                     self.score += 1
                     self.timer.add_time(5)
