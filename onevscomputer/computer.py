@@ -257,7 +257,7 @@ class Game_computer:
             
             # Desenha o botão de enviar. Altera a cor se estiver desativado.
             is_enabled = self.game_state == self.CARD_DETECTED
-            self.send.draw(self.screen, enabled=is_enabled) # Adaptei o draw do Button para aceitar 'enabled'
+            self.send.draw(self.screen) # Adaptei o draw do Button para aceitar 'enabled'
 
             self.screen.blit(self.back_img, self.back_rect)
 
