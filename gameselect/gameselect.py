@@ -14,6 +14,7 @@ class Select_Mode:
 
         self.background_green = Background(self.screen)
 
+        # Back arrow
         self.back_img = pygame.image.load("data/icon/arrow_back.png").convert_alpha()
         self.back_img = pygame.transform.scale(self.back_img, (40, 40))  # tamanho da seta
 

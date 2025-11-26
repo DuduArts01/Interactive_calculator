@@ -16,6 +16,13 @@ class MainMenuProgram:
 
         self.background_green = Background(self.screen)
 
+        # Back arrow
+        self.back_img = pygame.image.load("data/icon/arrow_back.png").convert_alpha()
+        self.back_img = pygame.transform.scale(self.back_img, (40, 40))  # tamanho da seta
+
+        self.back_rect = self.back_img.get_rect()
+        self.back_rect.topleft = (20, 10)  # posição no canto superior esquerdo
+
     def resizedElements(self):
         width, height = self.screen.get_size()
         base_width = 800
@@ -67,6 +74,12 @@ class MainMenuProgram:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
                         self.toggle_fullscreen()
+                
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.back_rect.collidepoint(event.pos):
+                        pygame.time.delay(150)  # pequeno delay opcional
+                        running = False
+                        next_screen = None
 
             '''Button action'''
             if self.start_button.action:
@@ -78,6 +91,7 @@ class MainMenuProgram:
 
             # Draw green background
             self.background_green.draw()
+            self.screen.blit(self.back_img, self.back_rect)
 
             # Draw Title (show on screen)
             self.interactive_calculator.draw(self.screen)  # Draw center title
