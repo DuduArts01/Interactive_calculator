@@ -95,9 +95,213 @@ class Game_computer:
         ten, unit, total = self.nfc.read_once() 
         
         if self.game_state == self.WAITING_FOR_REMOVAL:
-            # Se estamos esperando a remoção, ignoramos todas as leituras,
-            # exceto se o cartão for removido (total == -1), mas isso será 
-            # tratado no loop principal após o delay (sleep).
+            # Se estamos esperando a remoção, ignoramos leituras para manter o valor 
+            # de current_card_number até a transição ser feita por tempo (sleep).
             return self.current_card_number
 
-        # --- Lógica de Cartão
+        # --- Lógica de Cartão Detectado/Inserido ---
+        if total >= 0:
+            # Novo cartão detectado ou mesmo cartão mantido
+            if self.game_state == self.WAITING_FOR_CARD or total != self.current_card_number:
+                self.game_state = self.CARD_DETECTED
+                self.current_card_number = total
+                self.statusMessage = Font(f"Sensor: {total}", "Arial", 40, color=(0, 200, 0)) # Verde
+        
+        # --- Lógica de Cartão Removido ---
+        else: # total == -1 (Nenhum cartão válido ou cartão removido)
+            if self.game_state == self.CARD_DETECTED:
+                # Cartão removido antes de enviar
+                self.game_state = self.WAITING_FOR_CARD
+                self.current_card_number = -1
+                self.statusMessage = Font("Insira o cartão de respostas!", "Arial", 40, color=(255, 0, 0)) # Vermelho
+        
+        # Retorna o número que será usado para a resposta (ou -1 se WAITING_FOR_CARD)
+        return self.current_card_number
+
+    def show_card_removal_screen(self, screen):
+        """
+        Desenha a tela de "Retirar Cartão" e pausa por 2 segundos (tempo fixo para evitar travamento).
+        """
+        self.timer.pause()
+        
+        # Desenha a mensagem de "Retirar Cartão"
+        self.background_green.draw()
+        self.PVsComputerTitle.draw(screen)
+        removal_msg = Font("Retire o cartão para continuar...", "Arial", 40, color=(255, 165, 0)) # Laranja
+        removal_msg.draw(screen, y=self.height / 2.5)
+        pygame.display.update()
+        
+        sleep(2) # A tela fica visível por 2 segundos
+        
+        # Processa eventos básicos do Pygame para evitar 'Not Responding' durante o sleep
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.nfc.close()
+                return None
+        
+        # Retorna True para sinalizar que o tempo de remoção terminou
+        return True
+
+    def process_send_action(self, next_screen):
+        """
+        Lógica de processamento da resposta do usuário.
+        """
+        self.timer.pause()
+        answer_user = self.current_card_number
+        
+        # --- PROCESSAMENTO DA RESPOSTA ---
+        if self.logic.is_correct(answer_user):
+            # ACERTO
+            self.score += 1
+            self.timer.add_time(5)
+            self.operation_and_random = True # Próxima questão
+            
+            # Exibe mensagem de acerto
+            self.background_green.draw()
+            success_msg = Font("ACERTOU! +5 segundos", "Arial", 60)
+            success_msg.draw(self.screen, y=self.height / 2.2)
+            pygame.display.update()
+            sleep(1) # Delay para mensagem de acerto
+            
+            # Próximo estado: Espera a remoção do cartão
+            self.game_state = self.WAITING_FOR_REMOVAL
+            return None # Continua o jogo (mas vai para a tela de remoção)
+            
+        else:
+            # ERRO - FIM DE JOGO
+            self.background_green.draw()
+            error_msg = Font(f"Você errou! A resposta era: {self.logic.get_correct_answer()}", "Arial", 40)
+            error_msg.draw(self.screen, y=self.height / 2.2)
+            pygame.display.update()
+            sleep(2)
+
+            self.background_green.draw()
+            total_msg = Font(f"Total de Acertos: {self.score}", "Arial", 60)
+            total_msg.draw(self.screen, y=self.height / 2.2)
+            pygame.display.update()
+            sleep(2)
+            
+            # Próximo estado: Espera a remoção do cartão (FIM DE JOGO)
+            self.game_state = self.WAITING_FOR_REMOVAL
+            return "gameselect" # Define a tela de destino (FIM DE JOGO)
+
+    def run(self):
+        """
+        Loop principal da tela Game_computer.
+        """
+        running = True
+        next_screen = None
+
+        while running:
+            self.background_green.draw()
+            pygame.display.set_caption("Calculadora Interativa (1 Vs Computer)")
+            
+            # 1. Geração de Pergunta
+            if self.operation_and_random:
+                operator = self.logic.choose_operator()
+                self.NumbershowScreen = Font(f"{self.logic.n1} {operator} {self.logic.n2} = ?", "Arial", 60)
+                self.operation_and_random = False 
+
+            # 2. Atualiza estados do NFC
+            self.handle_nfc_status()
+
+            # --- Lógica de Transição de Remoção (Tempo Fixo) ---
+            if self.game_state == self.WAITING_FOR_REMOVAL:
+                next_screen_after_removal = next_screen # Salva a tela de destino (gameselect ou None)
+                
+                # Chama a tela de remoção que fará o sleep(2)
+                result = self.show_card_removal_screen(self.screen)
+                
+                if result is None: # Se o usuário fechou o Pygame durante o sleep
+                    running = False
+                    next_screen = None
+                    continue
+
+                # Após o sleep, volta para WAITING_FOR_CARD
+                self.game_state = self.WAITING_FOR_CARD
+                self.current_card_number = -1
+                self.statusMessage = Font("Insira o cartão de respostas!", "Arial", 40, color=(255, 0, 0))
+                self.timer.resume() # Retoma o timer
+
+                # Se a próxima tela for "gameselect" (FIM DE JOGO), encerra o loop principal
+                if next_screen_after_removal == "gameselect":
+                    running = False
+                    next_screen = "gameselect"
+                
+                continue # Volta ao topo para redesenhar a tela principal/finalizar
+
+            # 3. Lógica de Fim de Jogo (Tempo Esgotado)
+            remaining = self.timer.update()
+            if remaining <= 0:
+                # Transiciona para espera de remoção e fim de jogo
+                self.game_state = self.WAITING_FOR_REMOVAL
+                next_screen = "gameselect"
+                continue # Volta ao topo do loop para processar o WAITING_FOR_REMOVAL
+
+            # 4. Gerenciamento de Eventos (Teclado, Mouse, Seta de Voltar, Botão Enviar)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    next_screen = None
+                elif event.type == pygame.VIDEORESIZE and not self.fullscreen:
+                    width, height = event.size
+                    self.screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+                    self.resizedElements()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_f:
+                        self.toggle_fullscreen()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.back_rect.collidepoint(event.pos):
+                        pygame.time.delay(150)
+                        running = False
+                        next_screen = "gameselect"
+                    
+                    # 5. BOTÃO DE ENVIAR (Verifica o clique no loop de eventos)
+                    if self.game_state == self.CARD_DETECTED:
+                        if self.send.rect.collidepoint(event.pos):
+                            # Desenha o botão pressionado
+                            self.send.draw(self.screen)
+                            pygame.display.update()
+                            
+                            # Delay para dar tempo de estabilização do sensor NFC antes de ler
+                            sleep(0.5) 
+                            
+                            # Processa a resposta (Acerto/Erro) e define o próximo estado/tela
+                            next_screen = self.process_send_action(next_screen)
+                            
+                            # Se o estado mudou para WAITING_FOR_REMOVAL, o próximo ciclo do
+                            # loop principal processará a tela de remoção.
+                            if self.game_state == self.WAITING_FOR_REMOVAL:
+                                break
+
+                    elif self.game_state == self.WAITING_FOR_CARD:
+                        if self.send.rect.collidepoint(event.pos):
+                             # Se pressionar o botão em WAITING_FOR_CARD
+                            self.statusMessage = Font("Insira o cartão antes de enviar!", "Arial", 40, color=(255, 0, 0))
+
+            # 6. --- DESENHO DE TELA ---
+            self.PVsComputerTitle.draw(self.screen)
+            self.NumbershowScreen.draw(self.screen, y=self.height / 2.5)
+            
+            # Desenha a mensagem de status (Insira/Sensor: X)
+            if self.game_state != self.WAITING_FOR_REMOVAL:
+                self.statusMessage.draw(self.screen, y=self.height / 1.7)
+            
+            # Desenha o botão de enviar.
+            self.send.draw(self.screen) 
+
+            self.screen.blit(self.back_img, self.back_rect)
+
+            # Contador de acertos
+            score_text = Font(f"Acertos: {self.score}", "Arial", 30)
+            score_text.draw(self.screen, x=self.width / 20, y=self.height / 9)
+
+            # Cronômetro
+            timer_text = Font(self.timer.get_time_string(), "Arial", 30)
+            timer_text.draw(self.screen, x=self.width - 150, y=self.height / 9)
+
+            pygame.display.update()
+
+        # ENCERRAR NFC AO SAIR
+        self.nfc.close()
+        return next_screen
