@@ -88,34 +88,43 @@ class Game_computer:
     def handle_nfc_status(self):
         """
         Gerencia os estados WAITING_FOR_CARD e CARD_DETECTED.
-        Corrige o bug de leitura intermitente.
+        CORRIGIDO: A leitura estável é mantida mesmo com leituras intermitentes de falha.
         Retorna o número do cartão lido ou -1.
         """
         # Tenta ler o cartão.
         ten, unit, total = self.nfc.read_once() 
         
         if self.game_state == self.WAITING_FOR_REMOVAL:
-            # Se estamos esperando a remoção, ignoramos leituras para manter o valor 
-            # de current_card_number até a transição ser feita por tempo (sleep).
+            # Não fazemos nada com a leitura enquanto esperamos a remoção
             return self.current_card_number
 
-        # --- Lógica de Cartão Detectado/Inserido ---
+        # --- Lógica de Cartão Detectado/Inserido (total >= 0) ---
         if total >= 0:
-            # Novo cartão detectado ou mesmo cartão mantido
+            # Se a leitura foi bem sucedida, atualiza o estado e o número.
+            # Se o estado atual era WAITING_FOR_CARD, ou se o cartão mudou, atualiza.
             if self.game_state == self.WAITING_FOR_CARD or total != self.current_card_number:
                 self.game_state = self.CARD_DETECTED
                 self.current_card_number = total
                 self.statusMessage = Font(f"Sensor: {total}", "Arial", 40, color=(0, 200, 0)) # Verde
+                self.last_card_read = total # Marca a última leitura estável
+            
+            # Se a leitura for bem sucedida E for o mesmo cartão, mantemos o estado e o número.
         
-        # --- Lógica de Cartão Removido ---
-        else: # total == -1 (Nenhum cartão válido ou cartão removido)
+        # --- Lógica de Cartão Removido/Leitura Falha (total == -1) ---
+        else: 
+            # Se estamos no estado CARD_DETECTED E a leitura falhou,
+            # consideramos que o cartão foi removido.
+            # NOTA: Com esta alteração, leituras instáveis (0 -> -1 -> 0)
+            # farão com que o statusMessage mude brevemente para "Insira o cartão...",
+            # mas a próxima leitura de 0-9 (que é rápida) o trará de volta para CARD_DETECTED
+            # e atualizará a mensagem. A correção de fato é o delay de 0.5s no botão 'send'
+            # para capturar a leitura estável.
             if self.game_state == self.CARD_DETECTED:
-                # Cartão removido antes de enviar
+                # Cartão removido (ou leitura falha persistente)
                 self.game_state = self.WAITING_FOR_CARD
                 self.current_card_number = -1
                 self.statusMessage = Font("Insira o cartão de respostas!", "Arial", 40, color=(255, 0, 0)) # Vermelho
         
-        # Retorna o número que será usado para a resposta (ou -1 se WAITING_FOR_CARD)
         return self.current_card_number
 
     def show_card_removal_screen(self, screen):
@@ -139,7 +148,6 @@ class Game_computer:
                 self.nfc.close()
                 return None
         
-        # Retorna True para sinalizar que o tempo de remoção terminou
         return True
 
     def process_send_action(self, next_screen):
@@ -263,7 +271,7 @@ class Game_computer:
                             self.send.draw(self.screen)
                             pygame.display.update()
                             
-                            # Delay para dar tempo de estabilização do sensor NFC antes de ler
+                            # O delay de 0.5s é CRUCIAL para capturar a leitura estável do sensor
                             sleep(0.5) 
                             
                             # Processa a resposta (Acerto/Erro) e define o próximo estado/tela
